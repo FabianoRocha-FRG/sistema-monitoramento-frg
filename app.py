@@ -6,14 +6,20 @@ from docx import Document
 from datetime import datetime
 
 # -----------------------------
-# CONFIGURAÇÃO
+# CONFIGURAÇÃO DA PÁGINA
 # -----------------------------
-st.set_page_config(page_title="Sistema FRG", layout="wide")
+st.set_page_config(
+    page_title="Atlas Legislativo FRG",
+    page_icon="🗺️",
+    layout="wide"
+)
 
-st.title("📊 Sistema de Monitoramento Legislativo - FRG")
+st.title("🗺️ Atlas Legislativo FRG")
+st.markdown("### Plataforma de Inteligência e Monitoramento Legislativo Federal")
+st.divider()
 
 # -----------------------------
-# BANCO DE DADOS
+# BANCO DE DADOS LOCAL
 # -----------------------------
 conn = sqlite3.connect("frg_monitoramento.db", check_same_thread=False)
 cursor = conn.cursor()
@@ -28,6 +34,10 @@ CREATE TABLE IF NOT EXISTS radar (
     ementa TEXT,
     risco TEXT,
     cliente TEXT,
+    status TEXT,
+    prioridade TEXT,
+    responsavel TEXT,
+    proxima_acao TEXT,
     data_salvo TEXT
 )
 """)
@@ -51,7 +61,7 @@ def classificar_risco(ementa):
         return "🟡 Médio"
 
 # -----------------------------
-# FUNÇÃO CÂMARA
+# FUNÇÕES DE BUSCA
 # -----------------------------
 def buscar_camara(palavra):
     url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes?keywords=" + palavra
@@ -66,9 +76,6 @@ def buscar_camara(palavra):
             return df
     return pd.DataFrame()
 
-# -----------------------------
-# FUNÇÃO SENADO
-# -----------------------------
 def buscar_senado(palavra):
     url = f"https://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista.json?q={palavra}"
     response = requests.get(url)
@@ -88,16 +95,16 @@ def buscar_senado(palavra):
 # -----------------------------
 # INTERFACE
 # -----------------------------
-modo = st.selectbox("Modo de Busca", [
+modo = st.selectbox("Modo de Operação", [
     "Busca Unificada",
     "Câmara",
     "Senado",
-    "Radar FRG"
+    "Radar Estratégico FRG"
 ])
 
-if modo != "Radar FRG":
+if modo != "Radar Estratégico FRG":
 
-    palavra = st.text_input("Palavra-chave")
+    palavra = st.text_input("🔎 Palavra-chave para monitoramento")
 
     if st.button("Buscar"):
 
@@ -119,14 +126,18 @@ if modo != "Radar FRG":
 
                 st.dataframe(df, use_container_width=True)
 
-                st.subheader("Salvar no Radar")
+                st.subheader("Salvar no Radar Estratégico")
 
-                cliente = st.text_input("Nome do Cliente")
+                cliente = st.text_input("Cliente vinculado")
+                status = st.selectbox("Status", ["Monitorando", "Em articulação", "Reunião realizada", "Nota técnica enviada"])
+                prioridade = st.selectbox("Prioridade", ["Baixa", "Média", "Alta", "Urgente"])
+                responsavel = st.text_input("Responsável FRG")
+                proxima_acao = st.text_input("Próxima ação prevista")
 
-                if st.button("Salvar Selecionados no Radar"):
+                if st.button("Salvar no Radar"):
                     for _, row in df.iterrows():
                         cursor.execute("""
-                        INSERT INTO radar VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO radar VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """, (
                             str(row["id"]),
                             row["casa"],
@@ -136,29 +147,46 @@ if modo != "Radar FRG":
                             row["ementa"],
                             row["risco"],
                             cliente,
+                            status,
+                            prioridade,
+                            responsavel,
+                            proxima_acao,
                             datetime.now().strftime("%d/%m/%Y")
                         ))
                     conn.commit()
-                    st.success("Salvo no Radar FRG")
+                    st.success("Projeto salvo no Radar Estratégico FRG")
 
             else:
-                st.warning("Nenhum resultado encontrado.")
+                st.warning("Nenhuma proposição encontrada.")
 
 # -----------------------------
-# RADAR FRG
+# RADAR
 # -----------------------------
-if modo == "Radar FRG":
+if modo == "Radar Estratégico FRG":
 
     df_radar = pd.read_sql_query("SELECT * FROM radar", conn)
 
     if not df_radar.empty:
+
+        st.subheader("📊 Dashboard Executivo")
+
+        total = len(df_radar)
+        criticos = len(df_radar[df_radar["risco"] == "🔴 Crítico"])
+        altos = len(df_radar[df_radar["risco"] == "🟠 Alto"])
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total Monitorados", total)
+        col2.metric("Projetos Críticos", criticos)
+        col3.metric("Projetos Alto Risco", altos)
+
+        st.divider()
         st.dataframe(df_radar, use_container_width=True)
 
         cliente_relatorio = st.text_input("Gerar relatório para qual cliente?")
 
         if st.button("Gerar Relatório Word"):
             doc = Document()
-            doc.add_heading("Relatório Executivo - FRG", level=1)
+            doc.add_heading("Atlas Legislativo FRG", level=1)
             doc.add_paragraph(f"Cliente: {cliente_relatorio}")
             doc.add_paragraph(f"Data: {datetime.now().strftime('%d/%m/%Y')}")
 
@@ -169,10 +197,10 @@ if modo == "Radar FRG":
                     doc.add_paragraph(f"Risco: {row['risco']}")
                     doc.add_paragraph("")
 
-            nome_arquivo = f"Relatorio_FRG_{cliente_relatorio}.docx"
+            nome_arquivo = f"Atlas_Legislativo_FRG_{cliente_relatorio}.docx"
             doc.save(nome_arquivo)
 
             st.success(f"Relatório gerado: {nome_arquivo}")
 
     else:
-        st.info("Radar vazio.")
+        st.info("Radar Estratégico vazio.")
