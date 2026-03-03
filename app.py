@@ -1,13 +1,23 @@
 import streamlit as st
+import os
 
 # -----------------------------
-# CONFIGURAÇÃO
+# CONFIGURAÇÃO DA PÁGINA
 # -----------------------------
 st.set_page_config(
-    page_title="Atlas Legislativo - FRG Consultoria Política",
+    page_title="Atlas Legislativo – FRG Consultoria Política",
     page_icon="⚖️",
     layout="wide"
 )
+
+# -----------------------------
+# CAMINHO DAS IMAGENS
+# -----------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+logo_path = os.path.join(BASE_DIR, "assets", "logo_frg.png")
+congresso_path = os.path.join(BASE_DIR, "assets", "imagem_congresso.jpg")
+plenario_path = os.path.join(BASE_DIR, "assets", "imagem_plenario.jpg")
 
 # -----------------------------
 # IDENTIDADE VISUAL
@@ -18,7 +28,7 @@ st.markdown("""
 
 .titulo-principal {
     color: #C6A54A;
-    font-size: 46px;
+    font-size: 48px;
     font-weight: 700;
     text-align: center;
     text-shadow: 0px 0px 18px rgba(198,165,74,0.7);
@@ -49,117 +59,115 @@ footer {visibility: hidden;}
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# MENU SUPERIOR
+# HEADER
 # -----------------------------
-menu = st.radio(
-    "",
-    ["Home", "Quem Somos", "Serviços", "Cases", "Contato", "Plataforma"],
-    horizontal=True
+st.image(logo_path, width=200)
+
+st.markdown(
+    "<div class='titulo-principal'>ATLAS LEGISLATIVO<br>FRG CONSULTORIA POLÍTICA</div>",
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    "<div class='subtitulo'>Inteligência Legislativa | Estratégia Política | Relações Governamentais</div>",
+    unsafe_allow_html=True
 )
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------
-# HOME
+# IMAGEM INSTITUCIONAL
 # -----------------------------
-if menu == "Home":
-
-    st.markdown("<div class='titulo-principal'>ATLAS LEGISLATIVO<br>FRG CONSULTORIA POLÍTICA</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtitulo'>Inteligência Legislativa | Estratégia Política | Relações Governamentais</div>", unsafe_allow_html=True)
-
-    st.image("https://upload.wikimedia.org/wikipedia/commons/3/3f/Congresso_Nacional_-_Bras%C3%ADlia_-_DF.jpg", use_container_width=True)
-
-    st.markdown("""
-    <div class='secao'>
-    O Atlas Legislativo é a plataforma proprietária da FRG Consultoria Política,
-    desenvolvida para monitoramento estratégico do Congresso Nacional,
-    análise regulatória e articulação institucional de alto nível.
-    </div>
-    """, unsafe_allow_html=True)
+st.image(congresso_path, use_container_width=True)
 
 # -----------------------------
 # QUEM SOMOS
 # -----------------------------
-elif menu == "Quem Somos":
+st.markdown("## Quem Somos")
 
-    st.markdown("## Quem Somos")
+st.image(plenario_path, use_container_width=True)
 
-    st.image("https://upload.wikimedia.org/wikipedia/commons/9/95/Congresso_Nacional_plen%C3%A1rio.jpg", use_container_width=True)
+st.markdown("""
+<div class='secao'>
 
-    st.markdown("""
-    <div class='secao'>
-    A FRG é uma empresa especializada em Relações Institucionais e Governamentais.
-    Atuamos com inteligência legislativa, monitoramento estratégico e articulação política.
+A FRG Consultoria Política atua na interface estratégica entre o setor público e o setor privado,
+oferecendo inteligência legislativa, análise regulatória e monitoramento institucional
+no âmbito do Congresso Nacional.
 
-    Nosso diferencial está na combinação entre tecnologia, expertise política
-    e atuação assertiva, com foco em informações realmente relevantes.
-    </div>
-    """, unsafe_allow_html=True)
+Combinamos tecnologia, expertise política e articulação institucional
+para oferecer soluções estratégicas de alto impacto,
+sempre alinhadas aos objetivos dos nossos clientes.
+
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------
 # SERVIÇOS
 # -----------------------------
-elif menu == "Serviços":
+st.markdown("## Serviços Oferecidos")
 
-    st.markdown("## Serviços Oferecidos")
+st.markdown("""
+<div class='secao'>
 
-    st.markdown("""
-    <div class='secao'>
+• Acompanhamento Legislativo Prioritário  
+• Monitor Legislativo Completo  
+• Reports Estratégicos e Newsletters  
+• Informes em Tempo Real  
+• Mapeamento de Stakeholders  
+• Planejamento Estratégico  
+• Análises de Cenário  
+• Relacionamento Institucional  
 
-    • Acompanhamento Legislativo Prioritário  
-    • Monitor Legislativo Completo  
-    • Elaboração de Reports e Newsletters  
-    • Agenda Legislativa e Informes em Tempo Real  
-    • Mapeamento de Stakeholders  
-    • Planejamento Estratégico  
-    • Análises de Cenário  
-    • Relacionamento Institucional  
+</div>
+""", unsafe_allow_html=True)
 
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------
 # CASES
 # -----------------------------
-elif menu == "Cases":
+st.markdown("## Cases de Sucesso")
 
-    st.markdown("## Cases de Sucesso")
+st.markdown("""
+<div class='secao'>
 
-    st.markdown("""
-    <div class='secao'>
+✔ Manutenção de verbas indenizatórias extrateto  
+✔ Inclusão de benefícios fiscais na Reforma Tributária  
+✔ Aprovação de destaque no Senado Federal  
+✔ Apresentação e aprovação de emendas parlamentares  
+✔ Construção e aprovação de propostas normativas  
 
-    ✔ Manutenção de verbas indenizatórias extrateto  
-    ✔ Inclusão de benefícios fiscais na Reforma Tributária  
-    ✔ Aprovação de destaque no Senado Federal  
-    ✔ Apresentação e aprovação de emendas  
-    ✔ Construção e aprovação de propostas normativas  
+</div>
+""", unsafe_allow_html=True)
 
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------
 # CONTATO
 # -----------------------------
-elif menu == "Contato":
+st.markdown("## Contato")
 
-    st.markdown("## Contato Institucional")
+st.markdown("""
+<div class='secao'>
 
-    st.markdown("""
-    <div class='secao'>
+📍 SCN Quadra 04, Bloco B, Ed. Varig, Sala 702 – Brasília/DF  
+📩 <a href="mailto:contato@frgconsultoriapolitica.com.br">contato@frgconsultoriapolitica.com.br</a>  
+📱 <a href="https://wa.me/5561992518004" target="_blank">(61) 9 9251-8004</a>  
+📷 <a href="https://instagram.com/frgconsultoriapolitica" target="_blank">@frgconsultoriapolitica</a>
 
-    📍 SCN Quadra 04, Bloco B, Ed. Varig, Sala 702 – Brasília/DF  
-    📩 <a href="mailto:contato@frgconsultoriapolitica.com.br">contato@frgconsultoriapolitica.com.br</a>  
-    📱 <a href="https://wa.me/5561992518004" target="_blank">(61) 9 9251-8004</a>  
-    📷 <a href="https://instagram.com/frgconsultoriapolitica" target="_blank">@frgconsultoriapolitica</a>
+</div>
+""", unsafe_allow_html=True)
 
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------
 # PLATAFORMA (BLOQUEADA)
 # -----------------------------
-elif menu == "Plataforma":
+st.markdown("## Plataforma Atlas Legislativo")
 
+if st.button("Acessar Plataforma Completa"):
     st.warning("A Plataforma Atlas Legislativo é exclusiva para clientes da FRG Consultoria Política.")
     st.markdown("""
     <div class='secao'>
@@ -167,4 +175,4 @@ elif menu == "Plataforma":
     </div>
     """, unsafe_allow_html=True)
 
-    st.stop()
+st.stop()
